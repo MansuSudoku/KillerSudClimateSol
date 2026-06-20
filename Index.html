@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+<link rel="stylesheet" href="MyStyle.css">
+
+<script  src="MonthMedSud.js" > </script>
+<script  src="MonthEasySUD.js" >  </script>
+
+
+
+
+<script  src="MyJS1Tst.js" >
+</script>
+
+<script  src="JSCode4Cal.js" >
+</script>
+
+
+<script  >
+window.onload = main ;
+  </script>
+</head>
+
+<body style ="text-align : center; background-color:darkblue">
+<button  id="recieve"  onClick="newBoard.LogGridBorders()">Console log group borders</button>
+<button  id="clrGrps"  onClick="newBoard.initializeBoard()">Clear all grid group borders</button>
+<button  id="LevelSel"  onClick="newBoard.toggleLevelSel()">Toggle Load level select</button>
+
+
+
+
+
+<table id= "myTools" style= "border-radius:00%" > 
+<tr>
+<td></td>
+<td   style= "width:50px"><h id="CurDig">X</h></td>
+<td> </td>
+</tr>
+</table>
+
+
+<table  style="float:left;border-radius:10%">
+<tr><td>
+<table id="CalanderGen" style="float:left">
+</table>
+</td></tr>
+<tr><td>
+<table id="tableSelLev"  style="background-color:green;border:none;Display:none">
+<tr><td > <label>Select level to load</label>
+</td></tr>
+<tr><td >
+<input type="radio" id="EasyLev" name="Diff Level" value="EasyLev" onClick ="newBoard.RadioSelect(1)" >
+<label for="">Easy</label>
+</td></tr>
+<tr><td >
+<input type="radio" id="MedLev" name="Diff Level" value="MedLev" onClick ="newBoard.RadioSelect(2)">
+<label for="">Medium</label>
+</td></tr>
+<tr><td>
+<input type="radio" id="HardLev" name="Diff Level" value="MedLev" onClick ="newBoard.RadioSelect(3)">
+<label for="">Hard</label>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+
+ <table style="float:center;background-color:darkblue;border:none"  >
+ <tr style="border:none">
+ <td style="border:none">
+ <form style="float:left"  >
+<canvas id="myCanvas" width=180px height=180px style ="background-color :red"></canvas>
+</form> 
+</td>
+<td style="border:none">
+<form style="float:right; width=100px ; height=100px">
+<br>
+
+<table style="float:inline-start;border:none;border-radius:10%" id= "Statustab"  > 
+<tr >
+<td style="border:none"><h3 style ="float:centre"><b>Game status:</b></h3>
+ </td><td style="border:none"> <p id="status" >0 out of 81 </p></td>
+</tr>
+<tr >
+
+<td style ="width:100px; border:none"><h3 style ="float:centre" id="status"><b>Time</b></h3>
+</td >
+
+<td style="border:none"><p id="timer"> 0:10 </p></td>
+</tr>
+<tr >
+<td style="border:none">
+<input type="file" style ="float:centre;width:80px; background-color :red " name="inputfile" id="inputfile">
+<input type="file" style="float:centre;width:80px; background-color :red " name="KillRootName" id="KillRootName">
+<button  id="resett" onclick="compileSudFiles()">restart?</button>
+
+</td>
+</tr>
+
+</table>
+
+
+</form>
+</td>
+</tr>
+</table>
+
+
+</body>
+</html>
+
