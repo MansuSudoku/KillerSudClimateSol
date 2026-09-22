@@ -2,15 +2,17 @@
 const ValErrorColour = "red";
 const ValValidColour =   "yellow"; 
 
-var scale = 49;
+var scale = 50;
 var pad = 4;
 var widthcell=scale;
 var heightcell=scale ;
-var fontSize =15;
-var cluefontSize =11;
+var fontSize =16;
+var cluefontSize =12;
 var clueColour ="white";
 var fontName = 'Verdana';
-var LoadIndex = 0 ;
+var LoadIndex = 0;
+var LoadLevel = 0;
+
 
 /*
 const canvas = document.getElementById('myCanvas');
@@ -175,7 +177,7 @@ ctx.fillText("x", posx, posy);
 ctx.setLineDash([7, 3]);
 ctx.lineWidth =1;
 var GroupBorderColour = "";
-GroupBorderColour = "yellow" 
+GroupBorderColour = "Lightblue"; 
 
 if(this.bTop){
 
@@ -493,127 +495,155 @@ return (newString);
 }
 
 
+function initializeToolBox() {
+    var Toolbox = document.getElementById("myToolBox");
+    var trs = Toolbox.getElementsByTagName("tr");
+    var tds = document.getElementsByTagName("td");
+    for (i = 0; i < 4; i++) {
+        var newtr = document.createElement("tr");
+        for (let j = 0; j < 3; j++) {
+            var newTD = document.createElement("td");
+            var newBut = document.createElement("button");
+
+            newBut.width = 30;
+            newBut.height = 30;
+            var ButNum = ((i * 3) + j) + 1;
+            newBut.id = "ToolDigBtn" + ButNum;
+            //    if (j == 0) DigitBtns[j].innerHTML = "Del";
+            //    if (j != 10) DigitBtns[j].addEventListener('click', ToolDigButtonClick.bind(this, DigitBtns[j].id));
+
+
+            newBut.innerHTML = "" + ButNum;
+            if (ButNum == 10) {
+                newBut.innerHTML = "Del";
+            }
+            if (ButNum == 12) {
+                newBut.innerHTML = "Combs";
+            }
+             newBut.id = "ToolDigBtn" + ButNum;
+            if (ButNum == 11) {
+                newBut.id = "CurDig";
+                newBut.innerHTML = "CurDig";
+
+            }
+            newBut.addEventListener('click', ToolDigButtonClick.bind(this, newBut.id));
+            //     Tooltable.row[0].cell[0].appendChild(DigitBtns[j]); 
+            newTD.appendChild(newBut);
+            newtr.appendChild(newTD);
+        }
+        Toolbox.appendChild(newtr);
+    }
+}//end of initialize toolbos
+
 
 
 class KSudBoard {
 
-constructor(DataSrc, OutTab){
-this.ValidEntryCount = 0;
-this.GameOver = false;
-this.bGroupsEnables = false;   // need to be unpdated to true when loading Killer is done
-this.InData = DataSrc;
-this.OutDisplay = OutTab ;
-this.BsizeX = 9;
-this.BsizeY = 9;
-this.KSudGrid = [];
-this.KSudGrps = [];
-this.Display  = OutTab;
-this.CurrentDigit = -1;   // not yet valid number
-this.bCombs = false ;
-this.EnterTotal = 0;
-this.CorrectTotal = 0;
-this.clockInterval = null;
-
-//board initialize 
-
-for (let j=0; j<9; j++){
-var cellcol = [];
-for (let i=0; i<9 ; i++){
-var newGridObj = new GridObj(j, i);
-newGridObj.x = i ;
-newGridObj.y = j ;
-cellcol.push(newGridObj);
-}
-this.KSudGrid.push(cellcol);
-}
-//initializeTable(this.OutDisplay, this.KSudGrid, this.BsizeX, this.BsizeY);   // 
-var outDisp2 =  document.getElementById("my2Table");
-
-//initializeTable(outDisp2, this.KSudGrid, this.BsizeX, this.BsizeY);
-
-DrawQuads();
-
-//initializeGrid(this.OutDisplay);
-
-//initializeGrid(outDisp2);
 
 
+    constructor(DataSrc, OutTab) {
+        this.ValidEntryCount = 0;
+        this.GameOver = false;
+        this.bGroupsEnables = false;   // need to be unpdated to true when loading Killer is done
+        this.InData = DataSrc;
+        this.OutDisplay = OutTab;
+        this.BsizeX = 9;
+        this.BsizeY = 9;
+        this.KSudGrid = [];
+        this.KSudGrps = [];
+        this.Display = OutTab;
+        this.CurrentDigit = -1;   // not yet valid number
+        this.bCombs = false;
+        this.EnterTotal = 0;
+        this.CorrectTotal = 0;
+        this.clockInterval = null;
 
- var Tooltable = document.getElementById("myTools");
-  var trs = Tooltable.getElementsByTagName("tr");
- var tds = document.getElementsByTagName("td");
+        //board initialize 
 
-for (let j = 0 ; j <= 10 ; j++){
-var DigitBtns = [];
-        DigitBtns[j] = document.createElement("button");
-        DigitBtns[j].width = 30;
-        DigitBtns[j].height = 30;
-        DigitBtns[j].innerHTML =j;
-        DigitBtns[j].id = "ToolDigBtn" + (j) ;
-        if(j == 0 )  DigitBtns[j].innerHTML = "Del" ;
-        if(j != 10 ) DigitBtns[j].addEventListener('click', ToolDigButtonClick.bind(this,  DigitBtns[j].id));
-        if(j == 10 ){
-         DigitBtns[j].innerHTML = "Combs" ;
-        DigitBtns[j].addEventListener('click', ToolCombToggle.bind(this,  DigitBtns[j].id));
-         }
-       Tooltable.rows[0].cells[0].appendChild(DigitBtns[j]);
-       tds[0].appendChild(DigitBtns[j]);
-}
+        for (let j = 0; j < 9; j++) {
+            var cellcol = [];
+            for (let i = 0; i < 9; i++) {
+                var newGridObj = new GridObj(j, i);
+                newGridObj.x = i;
+                newGridObj.y = j;
+                cellcol.push(newGridObj);
+            }
+            this.KSudGrid.push(cellcol);
+        }
+        //initializeTable(this.OutDisplay, this.KSudGrid, this.BsizeX, this.BsizeY);   // 
+        var outDisp2 = document.getElementById("my2Table");
 
-var br= 1;
-//this.RenderDisplay(newBoard);
-} //end of constructor KSudBoard
+        //initializeTable(outDisp2, this.KSudGrid, this.BsizeX, this.BsizeY);
 
-LogGridBorders(){
-for (let j=0; j<9; j++){
-var RowOfBorders = "";
-for (let i=0; i<9 ; i++){
-//RowOfBorders +=  this.KSudGrid[i][j].stringBorders() + ",";
-RowOfBorders +=  newBoard.KSudGrid[i][j].stringBorders() + ",";
-}// end for i
-console.log(RowOfBorders)
-}// end for j
+        DrawQuads();
+
+        //initializeGrid(this.OutDisplay);
+
+        //initializeGrid(outDisp2);
+
+        initializeToolBox();
+
+        var Tooltable = document.getElementById("myTools");
+        var trs = Tooltable.getElementsByTagName("tr");
+        var tds = document.getElementsByTagName("td");
+
+        for (let j = 0; j <= 10; j++) {
+            var DigitBtns = [];
+            DigitBtns[j] = document.createElement("button");
+            DigitBtns[j].width = 30;
+            DigitBtns[j].height = 30;
+            DigitBtns[j].innerHTML = j;
+        //    DigitBtns[j].id = "ToolDigBtn" + (j);
+        //    if (j == 0) DigitBtns[j].innerHTML = "Del";
+        //    if (j != 10) DigitBtns[j].addEventListener('click', ToolDigButtonClick.bind(this, DigitBtns[j].id));
+            if (j == 10) {
+                DigitBtns[j].innerHTML = "Combs";
+                DigitBtns[j].addEventListener('click', ToolCombToggle.bind(this, DigitBtns[j].id));
+            }
+            Tooltable.rows[0].cells[0].appendChild(DigitBtns[j]);
+            tds[0].appendChild(DigitBtns[j]);
+        }
+
+        var br = 1;
+        //this.RenderDisplay(newBoard);
+    } //end of constructor KSudBoard
+
+    LogGridBorders() {
+        for (let j = 0; j < 9; j++) {
+            var RowOfBorders = "";
+            for (let i = 0; i < 9; i++) {
+                //RowOfBorders +=  this.KSudGrid[i][j].stringBorders() + ",";
+                RowOfBorders += newBoard.KSudGrid[i][j].stringBorders() + ",";
+            }// end for i
+            console.log(RowOfBorders)
+        }// end for j
 
 
-if (newBoard.KSudGrps!=null) {
-//console.log("also groups length = " + newBoard.KSudGrps.length);
-var strGrpCont = "";
-var totalGridMembers = 0;
-for (let i = 0; i < newBoard.KSudGrps.length; i++){
-   strGrpCont += "C" + newBoard.KSudGrps[i].GrpVal;
-   strGrpCont += "[" + newBoard.KSudGrps[i].GrpIndedArray.map(String)+ "]"; 
-   totalGridMembers += newBoard.KSudGrps[i].GrpIndedArray.length ;
-}
- console.log("Groups conts:=>" + strGrpCont);
- console.log("number of membered Grid elements = "+ totalGridMembers);
-}
-else console.log("also groups length = 0");
-} // endof Fn LogGridBorders
+        if (newBoard.KSudGrps != null) {
+            //console.log("also groups length = " + newBoard.KSudGrps.length);
+            var strGrpCont = "";
+            var totalGridMembers = 0;
+            for (let i = 0; i < newBoard.KSudGrps.length; i++) {
+                strGrpCont += "C" + newBoard.KSudGrps[i].GrpVal;
+                strGrpCont += "[" + newBoard.KSudGrps[i].GrpIndedArray.map(String) + "]";
+                totalGridMembers += newBoard.KSudGrps[i].GrpIndedArray.length;
+            }
+            console.log("Groups conts:=>" + strGrpCont);
+            console.log("number of membered Grid elements = " + totalGridMembers);
+        }
+        else console.log("also groups length = 0");
+    } // endof Fn LogGridBorders
+
+
+  
+
+
 
 //GrpVal = val;
  //   this.GrpIndedArray
 
 
 
- initializeToolBar()
-{
- var Tooltable = document.getElementById("myTools");
- var trs = Tooltable.getElementsByTagName("tr");
-var tds = document.getElementsByTagName("td");
-
-for (let j = 0 ; j <= 9 ; j++){
-var DigitBtns = [];
-     
-   DigitBtns[j] = document.createElement("button");
-   DigitBtns[j].width = 30;     
-   DigitBtns[j].height = 30;    
-   DigitBtns[j].innerHTML =j;
-   DigitBtns[j].id = "ToolDigBtn" + (j) ;
-    DigitBtns[j].addEventListener('click', ToolDigButtonClick.bind(this,  DigitBtns[j].id));
-//     Tooltable.row[0].cell[0].appendChild(DigitBtns[j]); 
-     tds[0].appendChild(DigitBtns[j]);
-}
-}//end of initialize toolbar
 
 
 isValidHorizontal(CurDigit, x, y){
@@ -994,7 +1024,8 @@ if(selev.style.display == "none")
 }
 
     RadioSelect(Level) {
-        if ((Level >= 1) & (Level <= 3)){
+        if ((Level >= 1) & (Level <= 3)) {
+            LoadLevel = Level;
             if (Level == 1)
             LoadGame(LoadGamesSIM[CurrentDay - 1], newBoard.KSudGrps, newBoard.KSudGrid);
 
@@ -1007,7 +1038,9 @@ if(selev.style.display == "none")
 
         } else console.log("Error:invalid level selected ");
 
-newBoard.toggleLevelSel();
+        newBoard.toggleLevelSel();
+        updatecurrentLoadDate();
+HideCal();
 }
 
 
@@ -1315,7 +1348,25 @@ function initCompSUDFilesHand() {
 
 }
 
+function OpenLoadCalender(){
+var Cal1 = document.getElementById('CalanderGen');
+ if(Cal1.style.display =="none")
+  Cal1.style.display = "block";
+  else
+   Cal1.style.display ="none";
 
+
+
+var Cal2 = document.getElementById('TestTab');
+  if(Cal2.style.display =="none")
+  Cal2.style.display = "block";
+  else
+   Cal2.style.display ="none";
+
+
+
+return;
+}
 
 
 
@@ -1396,12 +1447,17 @@ fr.send();
 
 
 
-function main()
+function main(event)
  {
-console.log("main code begin");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+
+//var n = this.timeStamp;
+//if( n > 500000 ) return;
+console.log("main code begin");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         window.onload = null ; 
+
 CodeGenTableCal();
-updateCodeGenCal();
-                                                                                                                                                                                                                                                                                                                                                     
+//updateTableCal();
+HideCal();
+
 var outDisp =  document.getElementById("myTable");
 //document.getElementById("reset").hidden = true;
 
@@ -1431,13 +1487,16 @@ while((docBody== null) ||(docBody== undefined ))
 {
 docBody =document.querySelector('body');
 inc++;
-}
-docBody.bgColor = "blue";
+    }
+
+ 
+//docBody.bgColor = "blue";
 
 
 
-    initFileEventHand();
-    initCompSUDFilesHand();
+//    initFileEventHand();    // load buttons being removed
+ //   initCompSUDFilesHand(); // load buttons being removed
+
 //initWWWFileEventHand();
 
 
@@ -1467,7 +1526,7 @@ if (canvas.getContext) {
 
 DrawQuads();
 console.log("main code end"+ inc);    
-  
+ 
  }
 
 
