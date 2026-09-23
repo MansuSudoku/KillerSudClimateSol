@@ -139,7 +139,7 @@ currentMonth++;
 
 function updatecurrentLoadDate() {
     var myCalStatus = document.getElementById("LoadName");
-    myCalStatus.innerHTML = "Loaded game is= " + Months[currentMonth] + " " + CurrentDay + LevelNames[LoadLevel] ;
+    myCalStatus.innerHTML = "" + Months[currentMonth-1] + " " + CurrentDay + LevelNames[LoadLevel] ;
     return;
 }
 

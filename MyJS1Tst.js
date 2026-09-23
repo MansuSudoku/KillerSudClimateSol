@@ -582,7 +582,7 @@ class KSudBoard {
         //initializeGrid(outDisp2);
 
         initializeToolBox();
-
+        /*
         var Tooltable = document.getElementById("myTools");
         var trs = Tooltable.getElementsByTagName("tr");
         var tds = document.getElementsByTagName("td");
@@ -603,7 +603,7 @@ class KSudBoard {
             Tooltable.rows[0].cells[0].appendChild(DigitBtns[j]);
             tds[0].appendChild(DigitBtns[j]);
         }
-
+        */
         var br = 1;
         //this.RenderDisplay(newBoard);
     } //end of constructor KSudBoard
